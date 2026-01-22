@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmation - Game Store{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <div class="display-1 text-success">✓</div>
+    <h2>Order Confirmed!</h2>
+    <p class="lead">Thank you for your purchase</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Order #{{ order.order_id }}</h5>
+                <p class="text-muted">Placed on {{ order.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                <hr>
+                
+                <h6>Order Details:</h6>
+                {% for item in items %}
+                <div class="d-flex justify-content-between mb-2">
+                    <span>{{ item.game.title }} x{{ item.quantity }}</span>
+                    <strong>£{{ "%.2f"|format(item.price * item.quantity) }}</strong>
+                </div>
+                {% endfor %}
+                
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <h5>Total:</h5>
+                    <h5 class="text-success">£{{ "%.2f"|format(order.total_amount) }}</h5>
+                </div>
+                
+                <div class="mt-4">
+                    <p><strong>Status:</strong> <span class="badge bg-warning">{{ order.status }}</span></p>
+                    <p class="text-muted">You will receive download links via email shortly.</p>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('orders.my_orders') }}" class="btn btn-primary">View All Orders</a>
+                    <a href="{{ url_for('games.list_games') }}" class="btn btn-outline-secondary">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

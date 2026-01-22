@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game.title }} - Game Store{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <img src="{{ game.image_url or 'https://via.placeholder.com/400x500' }}" 
+             class="img-fluid rounded" alt="{{ game.title }}">
+    </div>
+    <div class="col-md-8">
+        <h1>{{ game.title }}</h1>
+        <p class="text-muted">Published by {{ game.publisher }}</p>
+        
+        <div class="mb-3">
+            <span class="badge bg-primary">{{ game.rating }}/5.0 ⭐</span>
+            {% for genre in game.genre %}
+                <span class="badge bg-secondary">{{ genre }}</span>
+            {% endfor %}
+        </div>
+        
+        <h3 class="text-success">£{{ "%.2f"|format(game.price) }}</h3>
+        
+        <p class="lead">{{ game.description }}</p>
+        
+        <div class="mb-3">
+            <strong>Platforms:</strong>
+            {% for platform in game.platform %}
+                <span class="badge bg-info">{{ platform }}</span>
+            {% endfor %}
+        </div>
+        
+        <div class="mb-3">
+            <strong>Stock:</strong> 
+            {% if game.stock_quantity > 0 %}
+                <span class="text-success">{{ game.stock_quantity }} available</span>
+            {% else %}
+                <span class="text-danger">Out of stock</span>
+            {% endif %}
+        </div>
+        
+        {% if game.stock_quantity > 0 %}
+            <form method="POST" action="{{ url_for('orders.add_to_cart', game_id=game.game_id) }}">
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ game.stock_quantity }}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    🛒 Add to Cart
+                </button>
+            </form>
+        {% else %}
+            <button class="btn btn-secondary btn-lg" disabled>Out of Stock</button>
+        {% endif %}
+        
+        <a href="{{ url_for('games.list_games') }}" class="btn btn-outline-secondary btn-lg ms-2">
+            ← Back to Games
+        </a>
+    </div>
+</div>
+
+<hr class="my-5">
+
+<h3>Customer Reviews</h3>
+<div id="reviews">
+    <p class="text-muted">No reviews yet. Be the first to review this game!</p>
+</div>
+
+{% if session.get('user_id') %}
+<div class="card mt-4">
+    <div class="card-body">
+        <h5>Write a Review</h5>
+        <form method="POST" action="{{ url_for('games.add_review', game_id=game.game_id) }}">
+            <div class="mb-3">
+                <label class="form-label">Rating</label>
+                <select name="rating" class="form-select" required>
+                    <option value="">Choose...</option>
+                    <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                    <option value="4">⭐⭐⭐⭐ Good</option>
+                    <option value="3">⭐⭐⭐ Average</option>
+                    <option value="2">⭐⭐ Poor</option>
+                    <option value="1">⭐ Terrible</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Your Review</label>
+                <textarea name="review_text" class="form-control" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
