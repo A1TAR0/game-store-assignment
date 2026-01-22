@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Games - Game Store{% endblock %}
+
+{% block content %}
+<h2>Game Catalog</h2>
+<div class="row">
+    {% if games %}
+        {% for game in games %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{{ game.image_url or 'https://via.placeholder.com/300x200' }}" class="card-img-top" alt="{{ game.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ game.title }}</h5>
+                    <p class="card-text">{{ game.description[:100] }}...</p>
+                    <p class="card-text"><strong>£{{ game.price }}</strong></p>
+                    <p class="card-text"><small>{{ game.genre|join(', ') }}</small></p>
+                    <a href="{{ url_for('games.game_detail', game_id=game.game_id) }}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No games available. Add some games to get started!</p>
+    {% endif %}
+</div>
+{% endblock %}

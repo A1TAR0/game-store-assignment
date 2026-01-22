@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to Game Store!</h1>
+    <p class="lead">Your one-stop shop for the latest video games</p>
+    <hr class="my-4">
+    <p>Browse our collection of games across all platforms</p>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('games.list_games') }}" role="button">Browse Games</a>
+</div>
+{% endblock %}
