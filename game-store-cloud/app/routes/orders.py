@@ -142,9 +142,9 @@ def checkout():
                     'items': email_items
                 }
                 # Note: Update this URL when you deploy the function
-                # For local testing: http://localhost:8080
-                # requests.post('CLOUD_FUNCTION_URL', json=email_data)
-                print(f"Would send email to {user_email} for order {order_id}")
+                function_url = 'https://europe-west2-game-store-assignment.cloudfunctions.net/send-order-email'
+                requests.post(function_url, json=email_data, timeout=5)
+                print(f""Email notification sent to {user_email}}")
             except Exception as e:
                 print(f"Email notification failed: {e}")
                 # Don't fail the order if email fails

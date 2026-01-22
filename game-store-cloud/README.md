@@ -33,8 +33,6 @@ A cloud-based video game store application built with Python, Flask, and Google 
 
 # Testing Guide
 
-## Running Unit Tests
-
 ### Run all tests
 ```bash
 pytest -v
