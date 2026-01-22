@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from app.routes import auth, games, orders
+from app.routes import auth, games, orders, admin
 import os
 from dotenv import load_dotenv
 
@@ -15,6 +15,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
 app.register_blueprint(auth.bp)
 app.register_blueprint(games.bp)
 app.register_blueprint(orders.bp)
+app.register_blueprint(admin.bp)
 
 @app.route('/')
 def index():
