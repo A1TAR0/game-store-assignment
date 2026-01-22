@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for, flash, request, jsonify
 from app.models.order import Order
 from app.models.game import Game
+import requests
 
 bp = Blueprint('orders', __name__, url_prefix='/orders')
 
@@ -103,6 +104,7 @@ def checkout():
         # Prepare order items
         cart_items = []
         total = 0
+        email_items = []
         
         for game_id, quantity in cart.items():
             game = Game.find_by_id(game_id)
@@ -113,10 +115,39 @@ def checkout():
                     'quantity': quantity
                 })
                 total += game.price * quantity
+                email_items.append({
+                    'title': game.title,
+                    'quantity': quantity
+                })
         
         try:
             # Create order
             order_id = Order.create(session['user_id'], total, cart_items)
+            
+            # Get user email from database
+            from app.models.user import User
+            conn = get_sql_connection()
+            cursor = conn.cursor()
+            cursor.execute("SELECT email FROM users WHERE user_id = %s", (session['user_id'],))
+            user_email = cursor.fetchone()[0]
+            cursor.close()
+            conn.close()
+            
+            # Call Cloud Function to send email (if running)
+            try:
+                email_data = {
+                    'email': user_email,
+                    'order_id': order_id,
+                    'total': total,
+                    'items': email_items
+                }
+                # Note: Update this URL when you deploy the function
+                # For local testing: http://localhost:8080
+                # requests.post('CLOUD_FUNCTION_URL', json=email_data)
+                print(f"Would send email to {user_email} for order {order_id}")
+            except Exception as e:
+                print(f"Email notification failed: {e}")
+                # Don't fail the order if email fails
             
             # Clear cart
             session.pop('cart', None)
