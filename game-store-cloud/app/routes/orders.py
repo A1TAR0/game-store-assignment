@@ -144,7 +144,7 @@ def checkout():
                 # Note: Update this URL when you deploy the function
                 function_url = 'https://europe-west2-game-store-assignment.cloudfunctions.net/send-order-email'
                 requests.post(function_url, json=email_data, timeout=5)
-                print(f""Email notification sent to {user_email}}")
+                print(f"Email notification sent to {user_email}")
             except Exception as e:
                 print(f"Email notification failed: {e}")
                 # Don't fail the order if email fails

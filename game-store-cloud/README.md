@@ -25,12 +25,6 @@ A cloud-based video game store application built with Python, Flask, and Google 
 5. Copy `.env.example` to `.env` and fill in your credentials
 6. Run: `python main.py`
 
-## Database Setup
-[To be added]
-
-## Deployment
-[To be added]
-
 # Testing Guide
 
 ### Run all tests
