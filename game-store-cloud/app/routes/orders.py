@@ -126,7 +126,7 @@ def checkout():
             order_id = Order.create(session['user_id'], total, cart_items)
             
             # Get user email from database
-            from app.models.user import User
+            from app.utils.db_sql import get_sql_connection
             conn = get_sql_connection()
             cursor = conn.cursor()
             cursor.execute("SELECT email FROM users WHERE user_id = %s", (session['user_id'],))
