@@ -19,11 +19,11 @@ class User:
         
         try:
             cursor.execute(
-                "INSERT INTO users (email, username, password_hash) VALUES (%s, %s, %s)",
+                "INSERT INTO users (email, username, password_hash) VALUES (%s, %s, %s) RETURNING user_id",
                 (email, username, password_hash)
             )
+            user_id = cursor.fetchone()[0]
             conn.commit()
-            user_id = cursor.lastrowid
             cursor.close()
             conn.close()
             return User(user_id=user_id, email=email, username=username)

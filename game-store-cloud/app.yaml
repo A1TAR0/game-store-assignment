@@ -5,7 +5,7 @@ env_variables:
   SECRET_KEY: "your-production-secret-key-change-this"
   GCP_PROJECT_ID: "game-store-assignment"
   CLOUD_SQL_CONNECTION_NAME: "game-store-assignment:europe-west2:gamestore-sql"
-  DB_NAME: "game-store-assignment"
+  DB_NAME: "gamestore"
   DB_USER: "postgres"
   DB_PASSWORD: "ASSIGNMENT2026"
 

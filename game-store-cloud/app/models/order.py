@@ -20,10 +20,10 @@ class Order:
         try:
             # Insert order
             cursor.execute(
-                "INSERT INTO orders (user_id, total_amount, status) VALUES (%s, %s, %s)",
+                "INSERT INTO orders (user_id, total_amount, status) VALUES (%s, %s, %s) RETURNING order_id",
                 (user_id, total_amount, 'pending')
             )
-            order_id = cursor.lastrowid
+            order_id = cursor.fetchone()[0]
             
             # Insert order items
             for item in cart_items:
