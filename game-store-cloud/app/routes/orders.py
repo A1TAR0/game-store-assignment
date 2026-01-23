@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for, flash, request, jsonify
 from app.models.order import Order
 from app.models.game import Game
+from app.utils.db_sql import get_sql_connection
 import requests
 
 bp = Blueprint('orders', __name__, url_prefix='/orders')
