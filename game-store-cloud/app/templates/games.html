@@ -47,11 +47,14 @@
                         <p class="card-text">
                             <strong class="text-success">£{{ "%.2f"|format(game.price) }}</strong>
                         </p>
-                        <p class="card-text">
+                       <p class="card-text">
                             <small class="text-muted">
                                 {% for genre in game.genre[:2] %}
                                     <span class="badge bg-secondary">{{ genre }}</span>
                                 {% endfor %}
+                                {% if game.review_count %}
+                                    <span class="badge bg-info">{{ game.review_count }} review{{ 's' if game.review_count != 1 else '' }}</span>
+                                {% endif %}
                             </small>
                         </p>
                         <a href="{{ url_for('games.game_detail', game_id=game.game_id) }}" 

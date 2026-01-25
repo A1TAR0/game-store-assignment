@@ -8,7 +8,16 @@ bp = Blueprint('games', __name__, url_prefix='/games')
 @bp.route('/')
 def list_games():
     """Display all games"""
+    from app.utils.db_firestore import db
+    
     games = Game.get_all()
+    
+    # Get review counts for each game
+    for game in games:
+        reviews_ref = db.collection('reviews').where('game_id', '==', game.game_id)
+        review_count = len(list(reviews_ref.stream()))
+        game.review_count = review_count
+    
     return render_template('games.html', games=games)
 
 @bp.route('/<game_id>')
@@ -23,6 +32,9 @@ def game_detail(game_id):
     reviews_ref = db.collection('reviews').where('game_id', '==', game_id).order_by('created_at', direction='DESCENDING')
     
     reviews = []
+    total_rating = 0
+    review_count = 0
+
     for doc in reviews_ref.stream():
         review_data = doc.to_dict()
         reviews.append({
@@ -31,8 +43,17 @@ def game_detail(game_id):
             'review_text': review_data.get('review_text'),
             'created_at': review_data.get('created_at')
         })
+        total_rating += review_data.get('rating', 0)
+        review_count += 1
     
-    return render_template('game_detail.html', game=game, reviews=reviews)
+    # Calculate average rating
+    if review_count > 0:
+        average_rating = round(total_rating / review_count, 1)
+    else:
+        average_rating = game.rating  # Use default if no reviews
+    
+    return render_template('game_detail.html', game=game, reviews=reviews, 
+                         average_rating=average_rating, review_count=review_count)
 
 @bp.route('/<game_id>/review', methods=['POST'])
 def add_review(game_id):

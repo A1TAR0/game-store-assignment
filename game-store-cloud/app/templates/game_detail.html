@@ -13,12 +13,19 @@
         <p class="text-muted">Published by {{ game.publisher }}</p>
         
         <div class="mb-3">
-            <span class="badge bg-primary">{{ game.rating }}/5.0 ⭐</span>
+            <span class="badge bg-primary">
+                {{ average_rating }}/5.0 ⭐ 
+                {% if review_count > 0 %}
+                    ({{ review_count }} review{{ 's' if review_count != 1 else '' }})
+                {% else %}
+                    (No reviews yet)
+                {% endif %}
+            </span>
             {% for genre in game.genre %}
                 <span class="badge bg-secondary">{{ genre }}</span>
             {% endfor %}
         </div>
-        
+                
         <h3 class="text-success">£{{ "%.2f"|format(game.price) }}</h3>
         
         <p class="lead">{{ game.description }}</p>
