@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - Game Store{% endblock %}
+
+{% block content %}
+<div class="text-center" style="padding: 100px 0;">
+    <h1 class="display-1">404</h1>
+    <h2>Page Not Found</h2>
+    <p class="lead">Sorry, the page you're looking for doesn't exist.</p>
+    <div class="mt-4">
+        <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">Go Home</a>
+        <a href="{{ url_for('games.list_games') }}" class="btn btn-outline-primary btn-lg">Browse Games</a>
+    </div>
+</div>
+{% endblock %}
