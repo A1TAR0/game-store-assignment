@@ -15,9 +15,24 @@ def list_games():
 def game_detail(game_id):
     """Display single game details"""
     game = Game.find_by_id(game_id)
-    if game:
-        return render_template('game_detail.html', game=game)
-    return "Game not found", 404
+    if not game:
+        return "Game not found", 404
+    
+    # Get reviews for this game
+    from app.utils.db_firestore import db
+    reviews_ref = db.collection('reviews').where('game_id', '==', game_id).order_by('created_at', direction='DESCENDING')
+    
+    reviews = []
+    for doc in reviews_ref.stream():
+        review_data = doc.to_dict()
+        reviews.append({
+            'username': review_data.get('username'),
+            'rating': review_data.get('rating'),
+            'review_text': review_data.get('review_text'),
+            'created_at': review_data.get('created_at')
+        })
+    
+    return render_template('game_detail.html', game=game, reviews=reviews)
 
 @bp.route('/<game_id>/review', methods=['POST'])
 def add_review(game_id):
@@ -34,6 +49,9 @@ def add_review(game_id):
         return redirect(url_for('games.game_detail', game_id=game_id))
     
     # Add review to Firestore
+    from app.utils.db_firestore import db
+    from datetime import datetime
+    
     review_data = {
         'game_id': game_id,
         'user_id': session['user_id'],
